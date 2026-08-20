@@ -304,129 +304,230 @@ CLASS zcl_zabap_toc_ui5 IMPLEMENTATION.
 
   METHOD view_main.
 
-    DATA(view) = z2ui5_cl_xml_view=>factory( ).
-    DATA(page) = view->shell( )->page(
-      title         = `abap2UI5 - Transport of Copies`
-      shownavbutton = abap_false ).
+    DATA(view) = z2ui5_cl_ui5_view_builder=>factory( 
+                     )->ele( n = `View` ns = `mvc` 
+                     )->a( n = `xmlns` v = `sap.m` 
+                     )->a( n = `xmlns:mvc` v = `sap.ui.core.mvc` 
+                     )->a( n = `xmlns:core` v = `sap.ui.core` 
+                     )->a( n = `xmlns:form` v = `sap.ui.layout.form` 
+                     )->a( n = `xmlns:layout` v = `sap.ui.layout` 
+                     )->a( n = `displayBlock` v = `true` 
+                     )->a( n = `height` v = `100%` ).
+    DATA(page) = view->ele( `Shell` 
+                     )->ele( `Page` 
+                     )->a( n = `title` v = `abap2UI5 - Transport of Copies` 
+                     )->a( n = `showNavButton` b = abap_false ).
 
     " ---------- Selection block ----------
-    DATA(form) = page->grid( `L8 M10 S12` )->content( `layout`
-        )->simple_form( title = `Selection` editable = abap_true )->content( `form` ).
+    DATA(form) = page->ele( n = `Grid` ns = `layout` 
+                     )->a( n = `defaultSpan` v = `L8 M10 S12` 
+                     )->ele( n = `content` ns = `layout` 
+                     )->ele( n = `SimpleForm` ns = `form` 
+                     )->a( n = `title` v = `Selection` 
+                     )->a( n = `editable` b = abap_true 
+                     )->ele( n = `content` ns = `form` ).
 
-    form->title( `Target System` ).
-    form->label( `Target System / Group`
-        )->input(
-            value       = client->_bind_edit( s_sel-target_system )
-            placeholder = `e.g. Q01 or /MY_GRP/` ).
+    form->tag( `Title` 
+        )->a( n = `text` v = `Target System` ).
+    form->tag( `Label` 
+        )->a( n = `text` v = `Target System / Group` 
+        )->tag( `Input` 
+        )->a( n = `value` v = client->_bind_edit( s_sel-target_system ) 
+        )->a( n = `placeholder` v = `e.g. Q01 or /MY_GRP/` ).
 
-    form->title( `Filters` ).
-    form->label( `Transport`
-        )->input(
-            value       = client->_bind_edit( s_sel-transport )
-            placeholder = `single TR number, blank = all` ).
+    form->tag( `Title` 
+        )->a( n = `text` v = `Filters` ).
+    form->tag( `Label` 
+        )->a( n = `text` v = `Transport` 
+        )->tag( `Input` 
+        )->a( n = `value` v = client->_bind_edit( s_sel-transport ) 
+        )->a( n = `placeholder` v = `single TR number, blank = all` ).
 
-    form->label( `Owner`
-        )->input(
-            value       = client->_bind_edit( s_sel-owner )
-            placeholder = `user name, blank = all` ).
+    form->tag( `Label` 
+        )->a( n = `text` v = `Owner` 
+        )->tag( `Input` 
+        )->a( n = `value` v = client->_bind_edit( s_sel-owner ) 
+        )->a( n = `placeholder` v = `user name, blank = all` ).
 
-    form->label( `Description (LIKE, * wildcard)`
-        )->input(
-            value       = client->_bind_edit( s_sel-description )
-            placeholder = `*foo*` ).
+    form->tag( `Label` 
+        )->a( n = `text` v = `Description (LIKE, * wildcard)` 
+        )->tag( `Input` 
+        )->a( n = `value` v = client->_bind_edit( s_sel-description ) 
+        )->a( n = `placeholder` v = `*foo*` ).
 
-    form->label( `Include released transports`
-        )->checkbox( selected = client->_bind_edit( s_sel-include_released ) ).
+    form->tag( `Label` 
+        )->a( n = `text` v = `Include released transports` 
+        )->tag( `CheckBox` 
+        )->a( n = `selected` v = client->_bind_edit( s_sel-include_released ) ).
 
-    form->label( `Include ToCs`
-        )->checkbox( selected = client->_bind_edit( s_sel-include_tocs ) ).
+    form->tag( `Label` 
+        )->a( n = `text` v = `Include ToCs` 
+        )->tag( `CheckBox` 
+        )->a( n = `selected` v = client->_bind_edit( s_sel-include_tocs ) ).
 
-    form->label( `Include subtransports`
-        )->checkbox( selected = client->_bind_edit( s_sel-include_subs ) ).
+    form->tag( `Label` 
+        )->a( n = `text` v = `Include subtransports` 
+        )->tag( `CheckBox` 
+        )->a( n = `selected` v = client->_bind_edit( s_sel-include_subs ) ).
 
-    form->title( `Options` ).
-    form->label( `Description style`
-        )->segmented_button( selected_key = client->_bind_edit( s_sel-desc_mode )
-            )->items(
-                )->segmented_button_item( key = `0` text = `ToC-style`
-                )->segmented_button_item( key = `1` text = `Original`
-                )->segmented_button_item( key = `2` text = `Custom (popup)` ).
+    form->tag( `Title` 
+        )->a( n = `text` v = `Options` ).
+    form->tag( `Label` 
+        )->a( n = `text` v = `Description style` 
+        )->ele( `SegmentedButton` 
+        )->a( n = `selectedKey` v = client->_bind_edit( s_sel-desc_mode ) 
+        )->ele( `items` 
+        )->tag( `SegmentedButtonItem` 
+        )->a( n = `key` v = `0` 
+        )->a( n = `text` v = `ToC-style` 
+        )->tag( `SegmentedButtonItem` 
+        )->a( n = `key` v = `1` 
+        )->a( n = `text` v = `Original` 
+        )->tag( `SegmentedButtonItem` 
+        )->a( n = `key` v = `2` 
+        )->a( n = `text` v = `Custom (popup)` ).
 
-    form->label( `Max wait time on import (sec)`
-        )->input(
-            value = client->_bind_edit( s_sel-max_wait_sec )
-            type  = `Number` ).
+    form->tag( `Label` 
+        )->a( n = `text` v = `Max wait time on import (sec)` 
+        )->tag( `Input` 
+        )->a( n = `value` v = client->_bind_edit( s_sel-max_wait_sec ) 
+        )->a( n = `type` v = `Number` ).
 
-    form->label( `Ignore version on import`
-        )->checkbox( selected = client->_bind_edit( s_sel-ignore_version ) ).
+    form->tag( `Label` 
+        )->a( n = `text` v = `Ignore version on import` 
+        )->tag( `CheckBox` 
+        )->a( n = `selected` v = client->_bind_edit( s_sel-ignore_version ) ).
 
     " ---------- Action toolbar (search/reset) ----------
-    page->footer(
-        )->overflow_toolbar(
-            )->toolbar_spacer(
-            )->button(
-                text  = `Reset`
-                press = client->_event( `RESET` )
-                icon  = `sap-icon://clear-all`
-            )->button(
-                text  = `Search`
-                press = client->_event( `SEARCH` )
-                type  = `Emphasized`
-                icon  = `sap-icon://search` ).
+    page->ele( `footer` 
+        )->ele( `OverflowToolbar` 
+        )->tag( `ToolbarSpacer` 
+        )->tag( `Button` 
+        )->a( n = `text` v = `Reset` 
+        )->a( n = `press` v = client->_event( `RESET` ) 
+        )->a( n = `icon` v = `sap-icon://clear-all` 
+        )->tag( `Button` 
+        )->a( n = `text` v = `Search` 
+        )->a( n = `press` v = client->_event( `SEARCH` ) 
+        )->a( n = `type` v = `Emphasized` 
+        )->a( n = `icon` v = `sap-icon://search` ).
 
     " ---------- Result table ----------
-    DATA(tab) = page->table(
-      headertext = `Transports`
-      growing    = abap_true
-      growingthreshold = `100`
-      mode       = `None`
-      items      = client->_bind( t_report ) ).
+    DATA(tab) = page->ele( `Table` 
+                    )->a( n = `headerText` v = `Transports` 
+                    )->a( n = `growing` b = abap_true 
+                    )->a( n = `growingThreshold` v = `100` 
+                    )->a( n = `mode` v = `None` 
+                    )->a( n = `items` v = client->_bind( t_report ) ).
 
-    tab->columns(
-        )->column( width = `6rem`  )->text( `Status` )->get_parent(
-        )->column( width = `9rem`  )->text( `Transport` )->get_parent(
-        )->column( width = `4rem`  )->text( `Type` )->get_parent(
-        )->column( width = `8rem`  )->text( `Target` )->get_parent(
-        )->column( width = `8rem`  )->text( `Owner` )->get_parent(
-        )->column( width = `7rem`  )->text( `Created` )->get_parent(
-        )->column( width = `20rem` )->text( `Description` )->get_parent(
-        )->column( width = `4rem` halign = `Center` )->text( `ToC` )->get_parent(
-        )->column( width = `4rem` halign = `Center` )->text( `+Rel` )->get_parent(
-        )->column( width = `4rem` halign = `Center` )->text( `+Imp` )->get_parent(
-        )->column( width = `9rem`  )->text( `New ToC` )->get_parent(
-        )->column( width = `15rem` )->text( `Result` )->get_parent( ).
+    tab->ele( `columns` 
+        )->ele( `Column` 
+        )->a( n = `width` v = `6rem` 
+        )->tag( `Text` 
+        )->a( n = `text` v = `Status` 
+        )->end( 
+        )->ele( `Column` 
+        )->a( n = `width` v = `9rem` 
+        )->tag( `Text` 
+        )->a( n = `text` v = `Transport` 
+        )->end( 
+        )->ele( `Column` 
+        )->a( n = `width` v = `4rem` 
+        )->tag( `Text` 
+        )->a( n = `text` v = `Type` 
+        )->end( 
+        )->ele( `Column` 
+        )->a( n = `width` v = `8rem` 
+        )->tag( `Text` 
+        )->a( n = `text` v = `Target` 
+        )->end( 
+        )->ele( `Column` 
+        )->a( n = `width` v = `8rem` 
+        )->tag( `Text` 
+        )->a( n = `text` v = `Owner` 
+        )->end( 
+        )->ele( `Column` 
+        )->a( n = `width` v = `7rem` 
+        )->tag( `Text` 
+        )->a( n = `text` v = `Created` 
+        )->end( 
+        )->ele( `Column` 
+        )->a( n = `width` v = `20rem` 
+        )->tag( `Text` 
+        )->a( n = `text` v = `Description` 
+        )->end( 
+        )->ele( `Column` 
+        )->a( n = `width` v = `4rem` 
+        )->a( n = `hAlign` v = `Center` 
+        )->tag( `Text` 
+        )->a( n = `text` v = `ToC` 
+        )->end( 
+        )->ele( `Column` 
+        )->a( n = `width` v = `4rem` 
+        )->a( n = `hAlign` v = `Center` 
+        )->tag( `Text` 
+        )->a( n = `text` v = `+Rel` 
+        )->end( 
+        )->ele( `Column` 
+        )->a( n = `width` v = `4rem` 
+        )->a( n = `hAlign` v = `Center` 
+        )->tag( `Text` 
+        )->a( n = `text` v = `+Imp` 
+        )->end( 
+        )->ele( `Column` 
+        )->a( n = `width` v = `9rem` 
+        )->tag( `Text` 
+        )->a( n = `text` v = `New ToC` 
+        )->end( 
+        )->ele( `Column` 
+        )->a( n = `width` v = `15rem` 
+        )->tag( `Text` 
+        )->a( n = `text` v = `Result` 
+        )->end( ).
 
-    DATA(cells) = tab->items( )->column_list_item( highlight = `{HIGHLIGHT}` )->cells( ).
-    cells->text( `{RELEASED_TEXT}` ).
-    cells->text( `{TRANSPORT}` ).
-    cells->text( `{TYPE}` ).
-    cells->text( `{TARGET_SYSTEM}` ).
-    cells->text( `{OWNER}` ).
-    cells->text( `{CREATION_DATE}` ).
-    cells->text( `{DESCRIPTION}` ).
+    DATA(cells) = tab->ele( `items` 
+                      )->ele( `ColumnListItem` 
+                      )->a( n = `highlight` v = `{HIGHLIGHT}` 
+                      )->ele( `cells` ).
+    cells->tag( `Text` 
+        )->a( n = `text` v = `{RELEASED_TEXT}` ).
+    cells->tag( `Text` 
+        )->a( n = `text` v = `{TRANSPORT}` ).
+    cells->tag( `Text` 
+        )->a( n = `text` v = `{TYPE}` ).
+    cells->tag( `Text` 
+        )->a( n = `text` v = `{TARGET_SYSTEM}` ).
+    cells->tag( `Text` 
+        )->a( n = `text` v = `{OWNER}` ).
+    cells->tag( `Text` 
+        )->a( n = `text` v = `{CREATION_DATE}` ).
+    cells->tag( `Text` 
+        )->a( n = `text` v = `{DESCRIPTION}` ).
 
     " Three icon buttons replacing the SALV hotspot columns
-    cells->button(
-      icon    = `sap-icon://create`
-      tooltip = `Create ToC`
-      type    = `Transparent`
-      press   = client->_event( val = `TOC_C`
+    cells->tag( `Button` 
+        )->a( n = `icon` v = `sap-icon://create` 
+        )->a( n = `tooltip` v = `Create ToC` 
+        )->a( n = `type` v = `Transparent` 
+        )->a( n = `press` v = client->_event( val = `TOC_C`
                                  t_arg = VALUE #( ( `${TRANSPORT}` ) ) ) ).
-    cells->button(
-      icon    = `sap-icon://activate`
-      tooltip = `Create + Release ToC`
-      type    = `Transparent`
-      press   = client->_event( val = `TOC_CR`
+    cells->tag( `Button` 
+        )->a( n = `icon` v = `sap-icon://activate` 
+        )->a( n = `tooltip` v = `Create + Release ToC` 
+        )->a( n = `type` v = `Transparent` 
+        )->a( n = `press` v = client->_event( val = `TOC_CR`
                                  t_arg = VALUE #( ( `${TRANSPORT}` ) ) ) ).
-    cells->button(
-      icon    = `sap-icon://process`
-      tooltip = `Create + Release + Import ToC`
-      type    = `Transparent`
-      press   = client->_event( val = `TOC_CRI`
+    cells->tag( `Button` 
+        )->a( n = `icon` v = `sap-icon://process` 
+        )->a( n = `tooltip` v = `Create + Release + Import ToC` 
+        )->a( n = `type` v = `Transparent` 
+        )->a( n = `press` v = client->_event( val = `TOC_CRI`
                                  t_arg = VALUE #( ( `${TRANSPORT}` ) ) ) ).
 
-    cells->text( `{TOC_NUMBER}` ).
-    cells->text( `{TOC_STATUS}` ).
+    cells->tag( `Text` 
+        )->a( n = `text` v = `{TOC_NUMBER}` ).
+    cells->tag( `Text` 
+        )->a( n = `text` v = `{TOC_STATUS}` ).
 
     client->view_display( view->stringify( ) ).
 
@@ -435,27 +536,35 @@ CLASS zcl_zabap_toc_ui5 IMPLEMENTATION.
 
   METHOD popup_description.
 
-    DATA(popup) = z2ui5_cl_xml_view=>factory_popup( ).
-    DATA(dialog) = popup->dialog( title = |Description for new ToC ({ pending_transport })| ).
+    DATA(popup) = z2ui5_cl_ui5_view_builder=>factory( 
+                      )->ele( n = `FragmentDefinition` ns = `core` 
+                      )->a( n = `xmlns` v = `sap.m` 
+                      )->a( n = `xmlns:core` v = `sap.ui.core` 
+                      )->a( n = `xmlns:form` v = `sap.ui.layout.form` 
+                      )->a( n = `xmlns:layout` v = `sap.ui.layout` ).
+    DATA(dialog) = popup->ele( `Dialog` 
+                       )->a( n = `title` v = |Description for new ToC ({ pending_transport })| ).
 
-    dialog->simple_form( editable = abap_true
-        )->content( `form`
-            )->label( `Description for the Transport of Copies`
-            )->text_area(
-                value       = client->_bind_edit( custom_description )
-                rows        = `4`
-                width       = `40rem`
-                placeholder = `Enter the description that should appear on the new ToC` ).
+    dialog->ele( n = `SimpleForm` ns = `form` 
+        )->a( n = `editable` b = abap_true 
+        )->ele( n = `content` ns = `form` 
+        )->tag( `Label` 
+        )->a( n = `text` v = `Description for the Transport of Copies` 
+        )->tag( `TextArea` 
+        )->a( n = `value` v = client->_bind_edit( custom_description ) 
+        )->a( n = `rows` v = `4` 
+        )->a( n = `width` v = `40rem` 
+        )->a( n = `placeholder` v = `Enter the description that should appear on the new ToC` ).
 
-    dialog->buttons(
-        )->button(
-            text  = `Cancel`
-            press = client->_event( `DESC_CANCEL` )
-            type  = `Reject`
-        )->button(
-            text  = `Confirm`
-            press = client->_event( `DESC_OK` )
-            type  = `Emphasized` ).
+    dialog->ele( `buttons` 
+        )->tag( `Button` 
+        )->a( n = `text` v = `Cancel` 
+        )->a( n = `press` v = client->_event( `DESC_CANCEL` ) 
+        )->a( n = `type` v = `Reject` 
+        )->tag( `Button` 
+        )->a( n = `text` v = `Confirm` 
+        )->a( n = `press` v = client->_event( `DESC_OK` ) 
+        )->a( n = `type` v = `Emphasized` ).
 
     client->popup_display( popup->stringify( ) ).
 
