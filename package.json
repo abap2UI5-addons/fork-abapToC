@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "lint": "abaplint ./abaplint.jsonc",
+    "lint": "abaplint ./abaplint.json",
     "check:abap2ui5": "abap2ui5lint",
     "check": "npm run lint && npm run check:abap2ui5",
     "test": "npm run check"
