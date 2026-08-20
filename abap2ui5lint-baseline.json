@@ -1,0 +1,9 @@
+{
+  "note": "abap2ui5-linter baseline: findings that existed when the linter was adopted. Suppressed on every run; NEW findings still fail, a STALE entry fails too. Regenerate with --update-baseline.",
+  "findings": {
+    "src/zcl_zabap_toc_ui5.clas.abap|icon-too-new|||clear-all": 1,
+    "src/zcl_zabap_toc_ui5.clas.abap|missing-on-navigated-branch|||": 1,
+    "src/zcl_zabap_toc_ui5.clas.abap|obsolete-binder||_bind_edit|": 1,
+    "src/zcl_zabap_toc_ui5.clas.abap|unknown-binding-path|sap.m.Input|value|/S_SEL/TARGET_SYSTEM": 1
+  }
+}
