@@ -1,10 +1,10 @@
-[![ABAP](https://img.shields.io/badge/ABAP-Standard-blue)](#install)
+[![ABAP](https://img.shields.io/badge/ABAP-Standard-blue)](#installation)
 [![namespace](https://img.shields.io/badge/namespace-zcl__zabap__toc-blue)](abaplint.jsonc)
 [![dependency](https://img.shields.io/badge/dependency-abap2UI5-blue)](https://github.com/abap2UI5/abap2UI5)
-<br>
-[![check-abap2ui5](https://github.com/abap2UI5-addons/fork-abapToC/actions/workflows/check-abap2ui5.yaml/badge.svg)](https://github.com/abap2UI5-addons/fork-abapToC/actions/workflows/check-abap2ui5.yaml)
-<br>
 [![abap2UI5](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabap2UI5-addons%2Ffork-abapToC%2Fmain%2F.github%2Fbadges%2Fabap2ui5.json)](https://github.com/abap2UI5-addons/fork-abapToC/actions/workflows/check-abap2ui5.yaml)
+<br><br>
+[![abap-standard](https://github.com/abap2UI5-addons/fork-abapToC/actions/workflows/abap-standard.yaml/badge.svg)](https://github.com/abap2UI5-addons/fork-abapToC/actions/workflows/abap-standard.yaml)
+<br>
 [![check-abap2UI5](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabap2UI5-addons%2Ffork-abapToC%2Fmain%2F.github%2Fbadges%2Fcheck-abap2ui5.json)](https://github.com/abap2UI5-addons/fork-abapToC/actions/workflows/check-abap2ui5.yaml)
 
 # abapToC
