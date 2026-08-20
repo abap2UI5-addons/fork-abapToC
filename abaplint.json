@@ -1,6 +1,6 @@
 {
   "global": {
-    "files": "/src/**/*.*", 
+    "files": "/src/**/*.*",
     "exclude": [],
     "noIssues": [],
     "skipGeneratedBOPFInterfaces": false,
@@ -16,6 +16,11 @@
     {
       "url": "https://github.com/abaplint/deps",
       "folder": "/deps",
+      "files": "/src/**/*.*"
+    },
+    {
+      "url": "https://github.com/abap2UI5/abap2UI5",
+      "folder": "/abap2UI5",
       "files": "/src/**/*.*"
     }
   ],
@@ -66,11 +71,11 @@
     "cds_comment_style": {
       "exclude": [],
       "severity": "Error"
-    }, 
+    },
     "cds_parser_error": {
       "exclude": [],
       "severity": "Error"
-    }, 
+    },
     "check_ddic": {
       "exclude": [],
       "severity": "Warning"
@@ -79,18 +84,18 @@
       "exclude": [],
       "severity": "Error"
     },
-"check_syntax": {
-  "exclude": [],
-  "severity": "Error"
-},
+    "check_syntax": {
+      "exclude": [],
+      "severity": "Error"
+    },
     "check_transformation_exists": {
       "exclude": [],
       "severity": "Warning"
-    }, 
+    },
     "constructor_visibility_public": {
       "exclude": [],
       "severity": "Error"
-    }, 
+    },
     "dangerous_statement": {
       "exclude": [],
       "severity": "Warning",
@@ -267,7 +272,7 @@
     "main_file_contents": {
       "exclude": [],
       "severity": "Error"
-    }, 
+    },
     "message_exists": {
       "exclude": [],
       "severity": "Error",
@@ -276,11 +281,11 @@
     "method_implemented_twice": {
       "exclude": [],
       "severity": "Error"
-    }, 
+    },
     "method_overwrites_builtin": {
       "exclude": [],
       "severity": "Error"
-    }, 
+    },
     "msag_consistency": {
       "exclude": [],
       "severity": "Error",
@@ -406,7 +411,7 @@
         "LT",
         "LE"
       ]
-    }, 
+    },
     "select_performance": {
       "exclude": [],
       "severity": "Warning",
@@ -422,7 +427,7 @@
       "ignorePatterns": [],
       "parameter": "^P_.+$",
       "selectOption": "^S_.+$"
-    }, 
+    },
     "sicf_consistency": {
       "exclude": [],
       "severity": "Error",
@@ -465,7 +470,9 @@
       "severity": "Error"
     },
     "types_naming": {
-      "exclude": [],
+      "exclude": [
+        "zcl_zabap_toc_ui5\\."
+      ],
       "severity": "Error",
       "pattern": "^T[T]{0,1}_.+$"
     },
