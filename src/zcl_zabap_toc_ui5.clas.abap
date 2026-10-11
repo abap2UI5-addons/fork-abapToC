@@ -407,7 +407,7 @@ CLASS zcl_zabap_toc_ui5 IMPLEMENTATION.
         )->tag( `Button`
         )->a( n = `text` v = `Reset`
         )->a( n = `press` v = client->_event( `RESET` )
-        )->a( n = `icon` v = `sap-icon://clear-all`
+        )->a( n = `icon` v = `sap-icon://eraser`
         )->tag( `Button`
         )->a( n = `text` v = `Search`
         )->a( n = `press` v = client->_event( `SEARCH` )
