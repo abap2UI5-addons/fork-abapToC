@@ -4,8 +4,8 @@ CLASS zcl_zabap_toc_ui5 DEFINITION PUBLIC FINAL CREATE PUBLIC.
 
     INTERFACES z2ui5_if_app.
 
-    "! Selection-screen state.
     TYPES:
+      "! Selection-screen state.
       BEGIN OF ts_sel,
         target_system    TYPE ko013-tarsystem,
         transport        TYPE trkorr,
@@ -19,8 +19,8 @@ CLASS zcl_zabap_toc_ui5 DEFINITION PUBLIC FINAL CREATE PUBLIC.
         max_wait_sec     TYPE i,
       END OF ts_sel.
 
-    "! One result row in the UI table.
     TYPES:
+      "! One result row in the UI table.
       BEGIN OF ts_row,
         released_text  TYPE string,
         main_transport TYPE trkorr,
