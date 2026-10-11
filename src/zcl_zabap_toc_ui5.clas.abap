@@ -81,6 +81,10 @@ CLASS zcl_zabap_toc_ui5 IMPLEMENTATION.
     me->client = client.
     IF client->check_on_init( ).
       on_init( ).
+    ELSEIF client->check_on_navigated( ).
+      " a restored draft (bookmark, browser Back/Forward) - the view is
+      " rebuilt from the state, which the draft carries
+      view_main( ).
     ELSEIF client->check_on_event( ).
       on_event( ).
     ENDIF.
