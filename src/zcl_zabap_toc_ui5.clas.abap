@@ -56,6 +56,7 @@ CLASS zcl_zabap_toc_ui5 DEFINITION PUBLIC FINAL CREATE PUBLIC.
     METHODS on_event.
 
     METHODS view_main.
+    METHODS view_no_authorization.
     METHODS popup_description.
 
     METHODS gather_transports.
@@ -79,6 +80,18 @@ CLASS zcl_zabap_toc_ui5 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
     me->client = client.
+
+    " The report runs as transaction ZTOC, so SAP checks S_TCODE for ZTOC
+    " before it starts. This front end starts through the abap2UI5 HTTP
+    " handler instead, which checks nothing of the kind - so it asks the
+    " same question itself, on every roundtrip and not only the first one:
+    " an event reaches main( ) without passing on_init( ) again.
+    AUTHORITY-CHECK OBJECT 'S_TCODE' ID 'TCD' FIELD 'ZTOC'.
+    IF sy-subrc <> 0.
+      view_no_authorization( ).
+      RETURN.
+    ENDIF.
+
     IF client->check_on_init( ).
       on_init( ).
     ELSEIF client->check_on_navigated( ).
@@ -534,6 +547,32 @@ CLASS zcl_zabap_toc_ui5 IMPLEMENTATION.
         )->a( n = `text` v = `{TOC_NUMBER}` ).
     cells->tag( `Text`
         )->a( n = `text` v = `{TOC_STATUS}` ).
+
+    client->view_display( view->stringify( ) ).
+
+  ENDMETHOD.
+
+
+  METHOD view_no_authorization.
+
+    DATA(view) = z2ui5_cl_ui5_view_builder=>factory(
+                     )->ele( n = `View` ns = `mvc`
+                     )->a( n = `xmlns` v = `sap.m`
+                     )->a( n = `xmlns:mvc` v = `sap.ui.core.mvc`
+                     )->a( n = `displayBlock` v = `true`
+                     )->a( n = `height` v = `100%` ).
+
+    view->ele( `Shell`
+        )->ele( `Page`
+        )->a( n = `title` v = `abap2UI5 - Transport of Copies`
+        )->a( n = `showNavButton` b = abap_false
+        )->ele( `content`
+        )->tag( `MessageStrip`
+        )->a( n = `type` v = `Error`
+        )->a( n = `showIcon` b = abap_true
+        )->a( n = `text` v = `You are not authorized for transaction ZTOC (authorization object S_TCODE). `
+                          && `Ask your administrator for a role that contains it.`
+        )->a( n = `class` v = `sapUiSmallMargin` ).
 
     client->view_display( view->stringify( ) ).
 

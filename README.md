@@ -6,8 +6,8 @@
 [![License](https://img.shields.io/github/license/abap2UI5-addons/fork-abapToC)](LICENSE)
 <br>
 [![ABAP Standard](https://img.shields.io/github/actions/workflow/status/abap2UI5-addons/fork-abapToC/abap-standard.yaml?branch=main&label=ABAP%20Standard)](https://github.com/abap2UI5-addons/fork-abapToC/actions/workflows/abap-standard.yaml)
-[![check-abap2UI5](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabap2UI5-addons%2Ffork-abapToC%2Fmain%2F.github%2Fbadges%2Fcheck-abap2ui5.json)](https://github.com/abap2UI5-addons/fork-abapToC/actions/workflows/check-abap2ui5.yaml)
-[![abap2UI5](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabap2UI5-addons%2Ffork-abapToC%2Fmain%2F.github%2Fbadges%2Fabap2ui5.json)](https://github.com/abap2UI5-addons/fork-abapToC/actions/workflows/check-abap2ui5.yaml)
+[![check-abap2UI5](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabap2UI5-addons%2Ffork-abapToC%2Fbadges%2Fcheck-abap2ui5.json)](https://github.com/abap2UI5-addons/fork-abapToC/actions/workflows/check-abap2ui5.yaml)
+[![abap2UI5](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabap2UI5-addons%2Ffork-abapToC%2Fbadges%2Fabap2ui5.json)](https://github.com/abap2UI5-addons/fork-abapToC/actions/workflows/check-abap2ui5.yaml)
 
 **Create, release and import Transport of Copies with one click.** ABAP
 Transport of Copies (abapToC) brings the transaction `ZTOC` and, in this fork,
