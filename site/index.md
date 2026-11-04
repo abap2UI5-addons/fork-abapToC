@@ -2,7 +2,7 @@
 layout: home
 
 hero:
-  name: "ABAP Transport of Copies"
+  name: "Transport of Copies"
   text: "Create, release and import Transports of Copies with one click."
   image:
     src: /logo.svg
