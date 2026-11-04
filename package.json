@@ -7,7 +7,9 @@
     "lint": "abaplint ./abaplint.json",
     "check:abap2ui5": "abap2ui5lint",
     "check": "npm run lint && npm run check:abap2ui5",
-    "test": "npm run check"
+    "test": "npm run check",
+    "site": "npm run build --prefix site",
+    "site:dev": "npm run dev --prefix site"
   },
   "devDependencies": {
     "@abap2ui5/linter": "^0.8.5",

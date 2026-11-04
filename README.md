@@ -14,7 +14,7 @@ Transport of Copies (abapToC) brings the transaction `ZTOC` and, in this fork,
 an abap2UI5 front end for it. For SAP developers who work with Transports of
 Copies.
 
-> Part of [abap2UI5-addons](https://github.com/abap2UI5-addons) - addons and apps for [abap2UI5](https://github.com/abap2UI5/abap2UI5), installed with [abapGit](https://abapgit.org).
+> Part of [abap2UI5-addons](https://github.com/abap2UI5-addons) - addons and apps for [abap2UI5](https://github.com/abap2UI5/abap2UI5), installed with [abapGit](https://abapgit.org). Documentation: [abap2ui5-addons.github.io/fork-abapToC](https://abap2ui5-addons.github.io/fork-abapToC/).
 
 <img width="1015" height="593" alt="obraz" src="https://github.com/user-attachments/assets/b9ba4d10-0db1-4b93-9d67-ff1f9017a716" />
 
