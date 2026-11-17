@@ -25,7 +25,8 @@ Transport of Copies logic itself belongs upstream first.
 - [abap2UI5](https://github.com/abap2UI5/abap2UI5) — the framework, for the UI only
 
 There is no version pin on any of them — abaplint resolves each from its `main`
-branch. That is why the check workflows also run on a weekly schedule: a rename
+branch (`"branch": "main"` in `abaplint.json`, declared rather than left off -
+abap2UI5 CONVENTIONS §9). That is why `ci` also runs on a weekly schedule: a rename
 upstream breaks this repository silently, and with no pull request open nothing
 else would notice.
 
@@ -38,6 +39,29 @@ npm run check
 
 `npm run check` runs exactly what CI runs. See [CONTRIBUTING.md](CONTRIBUTING.md)
 for what each gate proves and how the abap2UI5-linter baseline works.
+
+## CI
+
+CI comes from the shared CI template of abap2UI5-addons (reusable workflows in
+[rap-ext](https://github.com/abap2UI5-addons/rap-ext/blob/main/.github/ci/README.md),
+pinned by commit in the `uses:` lines and moved by `bump-deps`):
+
+* `ci` - on every push to `main`, every pull request, weekly and by hand,
+  one job per check: `check / abaplint (./abaplint.json)` (Standard ABAP,
+  v750) and `check / abap2ui5lint` (the front end and its views, render gate
+  on; on `main` the two README badges are published to the branch `badges`).
+  These are the required status checks of the branch protection.
+* `deploy-pages` (the site) and `bump-deps` (monthly, one pull request: npm,
+  the pinned actions and the template pin - the last two only with the
+  `DEPS_TOKEN` secret - via `.github/scripts/update-deps.mjs`, the same file
+  as in every other repository).
+
+**No ABAP Cloud lint, on purpose.** Transport of Copies is classic ABAP: the
+report `ZTOC` with its selection screen, function groups and the `TR_*`
+function modules. abaplint for ABAP Cloud reports 64 issues on it (every
+`SELECTION-SCREEN`/`PARAMETERS`/`AT SELECTION-SCREEN`, unreleased function
+modules) - nothing a small change can fix without changing what the tool is.
+There is no 702 branch, no ABAP Unit suite and no rename script either.
 
 ## Views
 
