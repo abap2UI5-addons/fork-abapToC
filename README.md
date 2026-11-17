@@ -5,9 +5,9 @@
 [![abap2UI5](https://img.shields.io/badge/requires-abap2UI5-blue)](https://github.com/abap2UI5/abap2UI5)
 [![License](https://img.shields.io/github/license/abap2UI5-addons/fork-abapToC)](LICENSE)
 <br>
-[![ABAP Standard](https://img.shields.io/github/actions/workflow/status/abap2UI5-addons/fork-abapToC/abap-standard.yaml?branch=main&label=ABAP%20Standard)](https://github.com/abap2UI5-addons/fork-abapToC/actions/workflows/abap-standard.yaml)
-[![check-abap2UI5](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabap2UI5-addons%2Ffork-abapToC%2Fbadges%2Fcheck-abap2ui5.json)](https://github.com/abap2UI5-addons/fork-abapToC/actions/workflows/check-abap2ui5.yaml)
-[![abap2UI5](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabap2UI5-addons%2Ffork-abapToC%2Fbadges%2Fabap2ui5.json)](https://github.com/abap2UI5-addons/fork-abapToC/actions/workflows/check-abap2ui5.yaml)
+[![CI](https://img.shields.io/github/actions/workflow/status/abap2UI5-addons/fork-abapToC/ci.yaml?branch=main&label=CI)](https://github.com/abap2UI5-addons/fork-abapToC/actions/workflows/ci.yaml)
+[![check-abap2UI5](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabap2UI5-addons%2Ffork-abapToC%2Fbadges%2Fcheck-abap2ui5.json)](https://github.com/abap2UI5-addons/fork-abapToC/actions/workflows/ci.yaml)
+[![abap2UI5](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabap2UI5-addons%2Ffork-abapToC%2Fbadges%2Fabap2ui5.json)](https://github.com/abap2UI5-addons/fork-abapToC/actions/workflows/ci.yaml)
 
 **Create, release and import Transport of Copies with one click.** ABAP
 Transport of Copies (abapToC) brings the transaction `ZTOC` and, in this fork,
@@ -81,8 +81,9 @@ npm ci
 npm run check
 ```
 
-`npm run check` runs exactly what CI runs: abaplint (`abap-standard.yaml`) and
-the abap2UI5-linter (`check-abap2ui5.yaml`).
+`npm run check` runs exactly what CI runs (`ci.yaml`, from the shared CI
+template of abap2UI5-addons): abaplint (`abaplint.json`) and the
+abap2UI5-linter (`abap2ui5lint.jsonc`).
 
 ## Contributing
 
