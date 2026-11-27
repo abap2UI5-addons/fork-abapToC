@@ -36,7 +36,7 @@ CLASS zcl_zabap_toc_ui5 DEFINITION PUBLIC FINAL CREATE PUBLIC.
       END OF ts_row.
     TYPES tt_row TYPE STANDARD TABLE OF ts_row WITH EMPTY KEY.
 
-    "! Visible state - bound to the view via _bind / _bind_edit.
+    "! Visible state - bound to the view via _bind( ).
     DATA s_sel       TYPE ts_sel.
     DATA t_report    TYPE tt_row.
 
@@ -183,12 +183,18 @@ CLASS zcl_zabap_toc_ui5 IMPLEMENTATION.
   METHOD gather_transports.
 
     DATA lt_report TYPE tt_row.
+    DATA lt_description TYPE zcl_zabap_toc_report=>tt_range_of_description.
 
     " Equivalent to ZCL_ZABAP_TOC_REPORT->gather_transports, but with single-value
-    " filters (no SELECT-OPTIONS) - 'description' is matched with LIKE so '*' wildcards work.
-    DATA(lv_descr_pattern) = COND as4text(
-      WHEN s_sel-description IS INITIAL THEN '%'
-      ELSE replace( val = s_sel-description sub = '*' with = '%' occ = 0 ) ).
+    " filters instead of SELECT-OPTIONS. The description is turned into the range
+    " a SELECT-OPTIONS line would hold - CP when it has a * or + wildcard, EQ
+    " otherwise - so it matches exactly what the report matches: a '_' or '%' the
+    " user types is a literal character, not an SQL LIKE wildcard.
+    IF s_sel-description IS NOT INITIAL.
+      lt_description = VALUE #( ( sign   = 'I'
+                                  option = COND #( WHEN s_sel-description CA '*+' THEN 'CP' ELSE 'EQ' )
+                                  low    = s_sel-description ) ).
+    ENDIF.
 
     SELECT FROM e070
                 LEFT JOIN e07t ON e07t~trkorr = e070~trkorr
@@ -202,10 +208,11 @@ CLASS zcl_zabap_toc_ui5 IMPLEMENTATION.
         CASE WHEN e070~tarsystem <> @space THEN e070~tarsystem ELSE sup~tarsystem END AS target_system,
         e070~as4user       AS owner,
         e070~as4date       AS creation_date,
-        e07t~as4text       AS description
+        e07t~as4text       AS description,
+        CASE WHEN sup~trkorr IS NULL THEN e070~as4date ELSE sup~as4date END AS create_date_main
       WHERE ( @s_sel-transport = @space OR e070~trkorr  = @s_sel-transport )
         AND ( @s_sel-owner     = @space OR e070~as4user = @s_sel-owner     )
-        AND ( @s_sel-description = @space OR e07t~as4text LIKE @lv_descr_pattern )
+        AND e07t~as4text IN @lt_description
         AND ( @s_sel-include_subs     = @abap_true OR e070~strkorr = @space )
         AND ( @s_sel-include_released = @abap_true
               OR e070~trstatus IN ( 'L', 'D' )
@@ -213,6 +220,15 @@ CLASS zcl_zabap_toc_ui5 IMPLEMENTATION.
         AND ( @s_sel-include_tocs     = @abap_true OR e070~trfunction <> 'T' )
       ORDER BY e070~trkorr DESCENDING, e070~as4date DESCENDING
       INTO TABLE @DATA(lt_raw).
+
+    " Deduplicate by transport (same as the original)
+    DELETE ADJACENT DUPLICATES FROM lt_raw COMPARING transport.
+    " The order the report's ALV sorts in: a main transport's tasks and
+    " subtransports stay together under it, newest main transport first
+    SORT lt_raw BY create_date_main DESCENDING
+                   main_transport   ASCENDING
+                   type             ASCENDING
+                   creation_date    DESCENDING.
 
     " Build display rows
     LOOP AT lt_raw REFERENCE INTO DATA(lr_raw).
@@ -228,11 +244,6 @@ CLASS zcl_zabap_toc_ui5 IMPLEMENTATION.
         highlight      = `None` ).
       APPEND ls_row TO lt_report.
     ENDLOOP.
-
-    " Deduplicate by transport (same as the original)
-    SORT lt_report BY transport.
-    DELETE ADJACENT DUPLICATES FROM lt_report COMPARING transport.
-    SORT lt_report BY creation_date DESCENDING transport DESCENDING.
 
     t_report = lt_report.
 
@@ -351,7 +362,7 @@ CLASS zcl_zabap_toc_ui5 IMPLEMENTATION.
     form->tag( `Label`
         )->a( n = `text` v = `Target System / Group`
         )->tag( `Input`
-        )->a( n = `value` v = client->_bind_edit( s_sel-target_system )
+        )->a( n = `value` v = client->_bind( s_sel-target_system )
         )->a( n = `placeholder` v = `e.g. Q01 or /MY_GRP/` ).
 
     form->tag( `Title`
@@ -359,42 +370,42 @@ CLASS zcl_zabap_toc_ui5 IMPLEMENTATION.
     form->tag( `Label`
         )->a( n = `text` v = `Transport`
         )->tag( `Input`
-        )->a( n = `value` v = client->_bind_edit( s_sel-transport )
+        )->a( n = `value` v = client->_bind( s_sel-transport )
         )->a( n = `placeholder` v = `single TR number, blank = all` ).
 
     form->tag( `Label`
         )->a( n = `text` v = `Owner`
         )->tag( `Input`
-        )->a( n = `value` v = client->_bind_edit( s_sel-owner )
+        )->a( n = `value` v = client->_bind( s_sel-owner )
         )->a( n = `placeholder` v = `user name, blank = all` ).
 
     form->tag( `Label`
-        )->a( n = `text` v = `Description (LIKE, * wildcard)`
+        )->a( n = `text` v = `Description (* and + wildcards)`
         )->tag( `Input`
-        )->a( n = `value` v = client->_bind_edit( s_sel-description )
+        )->a( n = `value` v = client->_bind( s_sel-description )
         )->a( n = `placeholder` v = `*foo*` ).
 
     form->tag( `Label`
         )->a( n = `text` v = `Include released transports`
         )->tag( `CheckBox`
-        )->a( n = `selected` v = client->_bind_edit( s_sel-include_released ) ).
+        )->a( n = `selected` v = client->_bind( s_sel-include_released ) ).
 
     form->tag( `Label`
         )->a( n = `text` v = `Include ToCs`
         )->tag( `CheckBox`
-        )->a( n = `selected` v = client->_bind_edit( s_sel-include_tocs ) ).
+        )->a( n = `selected` v = client->_bind( s_sel-include_tocs ) ).
 
     form->tag( `Label`
         )->a( n = `text` v = `Include subtransports`
         )->tag( `CheckBox`
-        )->a( n = `selected` v = client->_bind_edit( s_sel-include_subs ) ).
+        )->a( n = `selected` v = client->_bind( s_sel-include_subs ) ).
 
     form->tag( `Title`
         )->a( n = `text` v = `Options` ).
     form->tag( `Label`
         )->a( n = `text` v = `Description style`
         )->ele( `SegmentedButton`
-        )->a( n = `selectedKey` v = client->_bind_edit( s_sel-desc_mode )
+        )->a( n = `selectedKey` v = client->_bind( s_sel-desc_mode )
         )->ele( `items`
         )->tag( `SegmentedButtonItem`
         )->a( n = `key` v = `0`
@@ -409,13 +420,13 @@ CLASS zcl_zabap_toc_ui5 IMPLEMENTATION.
     form->tag( `Label`
         )->a( n = `text` v = `Max wait time on import (sec)`
         )->tag( `Input`
-        )->a( n = `value` v = client->_bind_edit( s_sel-max_wait_sec )
+        )->a( n = `value` v = client->_bind( s_sel-max_wait_sec )
         )->a( n = `type` v = `Number` ).
 
     form->tag( `Label`
         )->a( n = `text` v = `Ignore version on import`
         )->tag( `CheckBox`
-        )->a( n = `selected` v = client->_bind_edit( s_sel-ignore_version ) ).
+        )->a( n = `selected` v = client->_bind( s_sel-ignore_version ) ).
 
     " ---------- Action toolbar (search/reset) ----------
     page->ele( `footer`
@@ -595,7 +606,7 @@ CLASS zcl_zabap_toc_ui5 IMPLEMENTATION.
         )->tag( `Label`
         )->a( n = `text` v = `Description for the Transport of Copies`
         )->tag( `TextArea`
-        )->a( n = `value` v = client->_bind_edit( custom_description )
+        )->a( n = `value` v = client->_bind( custom_description )
         )->a( n = `rows` v = `4`
         )->a( n = `width` v = `40rem`
         )->a( n = `placeholder` v = `Enter the description that should appear on the new ToC` ).
