@@ -183,12 +183,18 @@ CLASS zcl_zabap_toc_ui5 IMPLEMENTATION.
   METHOD gather_transports.
 
     DATA lt_report TYPE tt_row.
+    DATA lt_description TYPE zcl_zabap_toc_report=>tt_range_of_description.
 
     " Equivalent to ZCL_ZABAP_TOC_REPORT->gather_transports, but with single-value
-    " filters (no SELECT-OPTIONS) - 'description' is matched with LIKE so '*' wildcards work.
-    DATA(lv_descr_pattern) = COND as4text(
-      WHEN s_sel-description IS INITIAL THEN '%'
-      ELSE replace( val = s_sel-description sub = '*' with = '%' occ = 0 ) ).
+    " filters instead of SELECT-OPTIONS. The description is turned into the range
+    " a SELECT-OPTIONS line would hold - CP when it has a * or + wildcard, EQ
+    " otherwise - so it matches exactly what the report matches: a '_' or '%' the
+    " user types is a literal character, not an SQL LIKE wildcard.
+    IF s_sel-description IS NOT INITIAL.
+      lt_description = VALUE #( ( sign   = 'I'
+                                  option = COND #( WHEN s_sel-description CA '*+' THEN 'CP' ELSE 'EQ' )
+                                  low    = s_sel-description ) ).
+    ENDIF.
 
     SELECT FROM e070
                 LEFT JOIN e07t ON e07t~trkorr = e070~trkorr
@@ -202,10 +208,11 @@ CLASS zcl_zabap_toc_ui5 IMPLEMENTATION.
         CASE WHEN e070~tarsystem <> @space THEN e070~tarsystem ELSE sup~tarsystem END AS target_system,
         e070~as4user       AS owner,
         e070~as4date       AS creation_date,
-        e07t~as4text       AS description
+        e07t~as4text       AS description,
+        CASE WHEN sup~trkorr IS NULL THEN e070~as4date ELSE sup~as4date END AS create_date_main
       WHERE ( @s_sel-transport = @space OR e070~trkorr  = @s_sel-transport )
         AND ( @s_sel-owner     = @space OR e070~as4user = @s_sel-owner     )
-        AND ( @s_sel-description = @space OR e07t~as4text LIKE @lv_descr_pattern )
+        AND e07t~as4text IN @lt_description
         AND ( @s_sel-include_subs     = @abap_true OR e070~strkorr = @space )
         AND ( @s_sel-include_released = @abap_true
               OR e070~trstatus IN ( 'L', 'D' )
@@ -213,6 +220,15 @@ CLASS zcl_zabap_toc_ui5 IMPLEMENTATION.
         AND ( @s_sel-include_tocs     = @abap_true OR e070~trfunction <> 'T' )
       ORDER BY e070~trkorr DESCENDING, e070~as4date DESCENDING
       INTO TABLE @DATA(lt_raw).
+
+    " Deduplicate by transport (same as the original)
+    DELETE ADJACENT DUPLICATES FROM lt_raw COMPARING transport.
+    " The order the report's ALV sorts in: a main transport's tasks and
+    " subtransports stay together under it, newest main transport first
+    SORT lt_raw BY create_date_main DESCENDING
+                   main_transport   ASCENDING
+                   type             ASCENDING
+                   creation_date    DESCENDING.
 
     " Build display rows
     LOOP AT lt_raw REFERENCE INTO DATA(lr_raw).
@@ -228,11 +244,6 @@ CLASS zcl_zabap_toc_ui5 IMPLEMENTATION.
         highlight      = `None` ).
       APPEND ls_row TO lt_report.
     ENDLOOP.
-
-    " Deduplicate by transport (same as the original)
-    SORT lt_report BY transport.
-    DELETE ADJACENT DUPLICATES FROM lt_report COMPARING transport.
-    SORT lt_report BY creation_date DESCENDING transport DESCENDING.
 
     t_report = lt_report.
 
@@ -369,7 +380,7 @@ CLASS zcl_zabap_toc_ui5 IMPLEMENTATION.
         )->a( n = `placeholder` v = `user name, blank = all` ).
 
     form->tag( `Label`
-        )->a( n = `text` v = `Description (LIKE, * wildcard)`
+        )->a( n = `text` v = `Description (* and + wildcards)`
         )->tag( `Input`
         )->a( n = `value` v = client->_bind( s_sel-description )
         )->a( n = `placeholder` v = `*foo*` ).
