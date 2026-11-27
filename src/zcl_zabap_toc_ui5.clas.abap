@@ -36,7 +36,7 @@ CLASS zcl_zabap_toc_ui5 DEFINITION PUBLIC FINAL CREATE PUBLIC.
       END OF ts_row.
     TYPES tt_row TYPE STANDARD TABLE OF ts_row WITH EMPTY KEY.
 
-    "! Visible state - bound to the view via _bind / _bind_edit.
+    "! Visible state - bound to the view via _bind( ).
     DATA s_sel       TYPE ts_sel.
     DATA t_report    TYPE tt_row.
 
@@ -351,7 +351,7 @@ CLASS zcl_zabap_toc_ui5 IMPLEMENTATION.
     form->tag( `Label`
         )->a( n = `text` v = `Target System / Group`
         )->tag( `Input`
-        )->a( n = `value` v = client->_bind_edit( s_sel-target_system )
+        )->a( n = `value` v = client->_bind( s_sel-target_system )
         )->a( n = `placeholder` v = `e.g. Q01 or /MY_GRP/` ).
 
     form->tag( `Title`
@@ -359,42 +359,42 @@ CLASS zcl_zabap_toc_ui5 IMPLEMENTATION.
     form->tag( `Label`
         )->a( n = `text` v = `Transport`
         )->tag( `Input`
-        )->a( n = `value` v = client->_bind_edit( s_sel-transport )
+        )->a( n = `value` v = client->_bind( s_sel-transport )
         )->a( n = `placeholder` v = `single TR number, blank = all` ).
 
     form->tag( `Label`
         )->a( n = `text` v = `Owner`
         )->tag( `Input`
-        )->a( n = `value` v = client->_bind_edit( s_sel-owner )
+        )->a( n = `value` v = client->_bind( s_sel-owner )
         )->a( n = `placeholder` v = `user name, blank = all` ).
 
     form->tag( `Label`
         )->a( n = `text` v = `Description (LIKE, * wildcard)`
         )->tag( `Input`
-        )->a( n = `value` v = client->_bind_edit( s_sel-description )
+        )->a( n = `value` v = client->_bind( s_sel-description )
         )->a( n = `placeholder` v = `*foo*` ).
 
     form->tag( `Label`
         )->a( n = `text` v = `Include released transports`
         )->tag( `CheckBox`
-        )->a( n = `selected` v = client->_bind_edit( s_sel-include_released ) ).
+        )->a( n = `selected` v = client->_bind( s_sel-include_released ) ).
 
     form->tag( `Label`
         )->a( n = `text` v = `Include ToCs`
         )->tag( `CheckBox`
-        )->a( n = `selected` v = client->_bind_edit( s_sel-include_tocs ) ).
+        )->a( n = `selected` v = client->_bind( s_sel-include_tocs ) ).
 
     form->tag( `Label`
         )->a( n = `text` v = `Include subtransports`
         )->tag( `CheckBox`
-        )->a( n = `selected` v = client->_bind_edit( s_sel-include_subs ) ).
+        )->a( n = `selected` v = client->_bind( s_sel-include_subs ) ).
 
     form->tag( `Title`
         )->a( n = `text` v = `Options` ).
     form->tag( `Label`
         )->a( n = `text` v = `Description style`
         )->ele( `SegmentedButton`
-        )->a( n = `selectedKey` v = client->_bind_edit( s_sel-desc_mode )
+        )->a( n = `selectedKey` v = client->_bind( s_sel-desc_mode )
         )->ele( `items`
         )->tag( `SegmentedButtonItem`
         )->a( n = `key` v = `0`
@@ -409,13 +409,13 @@ CLASS zcl_zabap_toc_ui5 IMPLEMENTATION.
     form->tag( `Label`
         )->a( n = `text` v = `Max wait time on import (sec)`
         )->tag( `Input`
-        )->a( n = `value` v = client->_bind_edit( s_sel-max_wait_sec )
+        )->a( n = `value` v = client->_bind( s_sel-max_wait_sec )
         )->a( n = `type` v = `Number` ).
 
     form->tag( `Label`
         )->a( n = `text` v = `Ignore version on import`
         )->tag( `CheckBox`
-        )->a( n = `selected` v = client->_bind_edit( s_sel-ignore_version ) ).
+        )->a( n = `selected` v = client->_bind( s_sel-ignore_version ) ).
 
     " ---------- Action toolbar (search/reset) ----------
     page->ele( `footer`
@@ -595,7 +595,7 @@ CLASS zcl_zabap_toc_ui5 IMPLEMENTATION.
         )->tag( `Label`
         )->a( n = `text` v = `Description for the Transport of Copies`
         )->tag( `TextArea`
-        )->a( n = `value` v = client->_bind_edit( custom_description )
+        )->a( n = `value` v = client->_bind( custom_description )
         )->a( n = `rows` v = `4`
         )->a( n = `width` v = `40rem`
         )->a( n = `placeholder` v = `Enter the description that should appear on the new ToC` ).
